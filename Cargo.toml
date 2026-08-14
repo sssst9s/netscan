@@ -1,0 +1,59 @@
+[workspace]
+resolver = "2"
+members = ["crates/netscan-core"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.83"
+license = "MIT"
+authors = ["cz"]
+repository = "https://github.com/sssst9s/netscan"
+homepage = "https://github.com/sssst9s/netscan"
+keywords = ["network", "scanner", "security", "port-scanner", "nmap"]
+categories = ["command-line-utilities", "network-programming"]
+
+[workspace.dependencies]
+netscan-core = { path = "crates/netscan-core", version = "0.1.0" }
+
+tokio = { version = "1", default-features = false }
+tokio-util = { version = "0.7", default-features = false }
+futures = { version = "0.3", default-features = false }
+async-trait = "0.1"
+
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "0.8"
+csv = "1"
+
+socket2 = "0.5"
+ipnet = { version = "2", features = ["serde"] }
+hickory-resolver = { version = "0.24", default-features = false, features = [
+    "tokio-runtime",
+    "system-config",
+] }
+
+thiserror = "1"
+regex = "1"
+rand = "0.8"
+chrono = { version = "0.4", default-features = false, features = [
+    "clock",
+    "serde",
+    "std",
+] }
+tracing = "0.1"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+strip = "debuginfo"
+panic = "unwind"
+
+[profile.dev.package."*"]
+opt-level = 2
+
+[profile.bench]
+inherits = "release"
+debug = true
+strip = "none"

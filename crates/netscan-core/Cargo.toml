@@ -1,0 +1,66 @@
+[package]
+name = "netscan-core"
+description = "Scanning engine for netscan: host discovery, port scanning, service and version detection"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+categories.workspace = true
+readme = "README.md"
+
+[features]
+default = []
+
+raw = ["dep:pnet_datalink"]
+
+[dependencies]
+tokio = { workspace = true, features = [
+    "rt",
+    "net",
+    "time",
+    "sync",
+    "io-util",
+    "macros",
+] }
+tokio-util = { workspace = true, features = ["rt"] }
+futures = { workspace = true, features = ["std", "async-await"] }
+async-trait = { workspace = true }
+
+serde = { workspace = true }
+serde_json = { workspace = true }
+toml = { workspace = true }
+csv = { workspace = true }
+
+socket2 = { workspace = true, features = ["all"] }
+if-addrs = "0.15"
+ipnet = { workspace = true }
+hickory-resolver = { workspace = true }
+
+thiserror = { workspace = true }
+regex = { workspace = true }
+rand = { workspace = true }
+chrono = { workspace = true }
+tracing = { workspace = true }
+
+pnet_datalink = { version = "0.35", optional = true }
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "time", "net", "io-util", "test-util"] }
+criterion = { version = "0.5", default-features = false, features = ["cargo_bench_support"] }
+tempfile = "3"
+
+[[bench]]
+name = "parsing"
+harness = false
+
+[[bench]]
+name = "engine"
+harness = false
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]

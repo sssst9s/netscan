@@ -1,0 +1,38 @@
+default_profile = "quick"
+
+[defaults]
+description = "applied before any profile and before command line options"
+timing = "normal"
+reverse_dns = true
+adaptive = true
+
+[limits]
+max_targets = 65536
+max_ports_per_host = 131070
+max_total_probes = 20000000
+max_concurrency = 20000
+max_response_bytes = 65536
+event_buffer = 4096
+
+[profiles.lab]
+description = "the test network, everything on"
+ports = "top:1000"
+service_detection = true
+os_detection = true
+tls_inspection = true
+timing = "aggressive"
+
+[profiles.polite-sweep]
+description = "a slow look at a network that does not like being scanned"
+ports = "preset:common"
+timing = "polite"
+max_rate = 50
+scan_delay_ms = 100
+retries = 2
+
+[profiles.web-audit]
+description = "web ports with certificates"
+ports = "80,443,8000-8100,8443"
+service_detection = true
+tls_inspection = true
+max_intrusiveness = 3

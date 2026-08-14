@@ -1,0 +1,8 @@
+too-many-arguments-threshold = 10
+type-complexity-threshold = 500
+
+allow-unwrap-in-tests = true
+allow-expect-in-tests = true
+allow-panic-in-tests = true
+
+doc-valid-idents = ["ARP", "CIDR", "DNS", "ICMP", "IPv4", "IPv6", "MAC", "OUI", "TCP", "TLS", "UDP", "SYN", "JSONL", ".."]

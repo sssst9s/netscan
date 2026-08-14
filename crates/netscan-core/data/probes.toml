@@ -1,0 +1,477 @@
+## netscan built-in service probes.
+##
+## This file is embedded in the binary at compile time. Users can add their own
+## probes with `--probe-file <path>`; a probe with the same `name` as one here
+## replaces it.
+##
+## Fields
+## ------
+##   name           unique identifier, recorded as the detection source
+##   transport      "tcp" or "udp"                            (default: tcp)
+##   ports          ports this probe targets; omit for "any"  (default: any)
+##   intrusiveness  0 = read the banner only, 9 = anything    (default: 0)
+##   send           payload to send; supports \r \n \t \0 \xNN \\ and {host}
+##   use_banner     match against the unprompted greeting instead of sending
+##
+## Each [[probe.match]] is tried in order and the first match wins.
+## `product`, `version` and `extra` may reference capture groups as $1, $2, ...
+##
+## Patterns are matched against raw bytes. Prefix a pattern with `(?-u)` when it
+## needs to match non-UTF-8 data, which every binary protocol below does.
+##
+## Values use TOML literal strings (single quotes) so that backslashes reach the
+## probe engine unchanged.
+
+# ---------------------------------------------------------------------------
+# Passive probes: the service speaks first, so identification is free.
+# ---------------------------------------------------------------------------
+
+[[probe]]
+name = "ssh"
+ports = [22, 2222, 22222]
+intrusiveness = 0
+use_banner = true
+[[probe.match]]
+pattern = '^SSH-([0-9.]+)-OpenSSH[_-]([0-9][^\r\n ]*)'
+service = "ssh"
+product = "OpenSSH"
+version = "$2"
+extra = "protocol $1"
+[[probe.match]]
+pattern = '^SSH-([0-9.]+)-dropbear[_-]?([0-9][^\r\n ]*)?'
+service = "ssh"
+product = "Dropbear"
+version = "$2"
+[[probe.match]]
+pattern = '^SSH-([0-9.]+)-([^\r\n]+)'
+service = "ssh"
+product = "$2"
+extra = "protocol $1"
+confidence = "high"
+
+[[probe]]
+name = "ftp"
+ports = [21, 990, 2121]
+intrusiveness = 0
+use_banner = true
+[[probe.match]]
+pattern = '^220[ -].*vsFTPd ([0-9.]+)'
+service = "ftp"
+product = "vsftpd"
+version = "$1"
+[[probe.match]]
+pattern = '^220[ -].*ProFTPD ([0-9][^ ]*)'
+service = "ftp"
+product = "ProFTPD"
+version = "$1"
+[[probe.match]]
+pattern = '^220[ -].*FileZilla Server[^0-9]*([0-9.]+)?'
+service = "ftp"
+product = "FileZilla Server"
+version = "$1"
+[[probe.match]]
+pattern = '^220[ -]([^\r\n]{0,80})'
+service = "ftp"
+extra = "$1"
+confidence = "high"
+
+[[probe]]
+name = "smtp"
+ports = [25, 465, 587, 2525]
+intrusiveness = 0
+use_banner = true
+[[probe.match]]
+pattern = '^220[ -][^\r\n]*Postfix'
+service = "smtp"
+product = "Postfix"
+[[probe.match]]
+pattern = '^220[ -][^\r\n]*Exim ([0-9][^ ]*)'
+service = "smtp"
+product = "Exim"
+version = "$1"
+[[probe.match]]
+pattern = '^220[ -][^\r\n]*Microsoft ESMTP MAIL Service[^0-9]*([0-9.]+)?'
+service = "smtp"
+product = "Microsoft Exchange"
+version = "$1"
+[[probe.match]]
+pattern = '^220[ -]([^\r\n]{0,80})'
+service = "smtp"
+extra = "$1"
+confidence = "high"
+
+[[probe]]
+name = "pop3"
+ports = [110, 995]
+intrusiveness = 0
+use_banner = true
+[[probe.match]]
+pattern = '^\+OK[ -]([^\r\n]{0,80})'
+service = "pop3"
+extra = "$1"
+
+[[probe]]
+name = "imap"
+ports = [143, 993]
+intrusiveness = 0
+use_banner = true
+[[probe.match]]
+pattern = '^\* OK[ \[]([^\r\n]{0,80})'
+service = "imap"
+extra = "$1"
+
+[[probe]]
+name = "nntp"
+ports = [119, 563]
+intrusiveness = 0
+use_banner = true
+[[probe.match]]
+pattern = '^20[01] ([^\r\n]{0,80})'
+service = "nntp"
+extra = "$1"
+
+[[probe]]
+name = "irc"
+ports = [6667, 6697, 194]
+intrusiveness = 0
+use_banner = true
+[[probe.match]]
+pattern = '(?-u)(NOTICE AUTH|:.*\d{3} .*Welcome to the)'
+service = "irc"
+
+[[probe]]
+name = "telnet"
+ports = [23, 992, 2323]
+intrusiveness = 0
+use_banner = true
+[[probe.match]]
+pattern = '(?-u)^\xff[\xfb-\xfe]'
+service = "telnet"
+extra = "option negotiation observed"
+[[probe.match]]
+pattern = '(?i)(login:|username:|password:)'
+service = "telnet"
+confidence = "medium"
+
+[[probe]]
+name = "vnc"
+ports = [5900, 5901, 5902, 5903]
+intrusiveness = 0
+use_banner = true
+[[probe.match]]
+pattern = '^RFB ([0-9]{3}\.[0-9]{3})'
+service = "vnc"
+extra = "RFB protocol $1"
+
+[[probe]]
+name = "mysql"
+ports = [3306, 3307, 33060]
+intrusiveness = 0
+use_banner = true
+# MySQL and MariaDB open with a handshake packet: a 3-byte length, a sequence
+# number, protocol version 10, then a NUL-terminated version string.
+[[probe.match]]
+pattern = '(?-u)^[\x00-\xff]{3}\x00\x0a([0-9][^\x00]{0,40})\x00'
+service = "mysql"
+version = "$1"
+[[probe.match]]
+pattern = '(?-u)^[\x00-\xff]{3}\xffj\x04'
+service = "mysql"
+extra = "host is not allowed to connect"
+confidence = "high"
+
+[[probe]]
+name = "rsync"
+ports = [873]
+intrusiveness = 0
+use_banner = true
+[[probe.match]]
+pattern = '^@RSYNCD: ([0-9.]+)'
+service = "rsync"
+product = "rsyncd"
+version = "$1"
+
+# ---------------------------------------------------------------------------
+# Active probes: a payload is sent and the reply identifies the service.
+# ---------------------------------------------------------------------------
+
+[[probe]]
+name = "http"
+ports = [
+    80, 81, 82, 83, 84, 85, 88, 443, 591, 2082, 2083, 3000, 4443, 4567, 5000,
+    5601, 7001, 8000, 8001, 8008, 8009, 8080, 8081, 8086, 8088, 8090, 8123,
+    8161, 8180, 8443, 8500, 8834, 8880, 8888, 9000, 9090, 9200, 9300, 10000,
+    15672,
+]
+intrusiveness = 2
+send = 'GET / HTTP/1.1\r\nHost: {host}\r\nUser-Agent: netscan\r\nAccept: */*\r\nConnection: close\r\n\r\n'
+[[probe.match]]
+pattern = '(?i)^HTTP/1\.[01] [0-9]{3}[^\r\n]*\r\n(?s).*?server: *nginx/([0-9][^\r\n]*)'
+service = "http"
+product = "nginx"
+version = "$1"
+[[probe.match]]
+pattern = '(?i)^HTTP/1\.[01] [0-9]{3}[^\r\n]*\r\n(?s).*?server: *Apache/([0-9][^\r\n ]*)'
+service = "http"
+product = "Apache httpd"
+version = "$1"
+[[probe.match]]
+pattern = '(?i)^HTTP/1\.[01] [0-9]{3}[^\r\n]*\r\n(?s).*?server: *Microsoft-IIS/([0-9.]+)'
+service = "http"
+product = "Microsoft IIS"
+version = "$1"
+[[probe.match]]
+pattern = '(?i)^HTTP/1\.[01] [0-9]{3}[^\r\n]*\r\n(?s).*?server: *lighttpd/([0-9][^\r\n ]*)'
+service = "http"
+product = "lighttpd"
+version = "$1"
+[[probe.match]]
+pattern = '(?i)^HTTP/1\.[01] [0-9]{3}[^\r\n]*\r\n(?s).*?server: *Caddy'
+service = "http"
+product = "Caddy"
+[[probe.match]]
+pattern = '(?s)"cluster_name" *: *"[^"]*".*?"number" *: *"([0-9][^"]*)"'
+service = "elasticsearch"
+product = "Elasticsearch"
+version = "$1"
+[[probe.match]]
+pattern = '(?s)"ApiVersion" *: *"([0-9.]+)"'
+service = "docker"
+product = "Docker Engine API"
+version = "$1"
+[[probe.match]]
+pattern = '(?i)x-jenkins: *([0-9][^\r\n]*)'
+service = "http"
+product = "Jenkins"
+version = "$1"
+[[probe.match]]
+pattern = '(?i)^HTTP/1\.[01] [0-9]{3}[^\r\n]*\r\n(?s).*?server: *([^\r\n]{1,60})'
+service = "http"
+product = "$1"
+[[probe.match]]
+pattern = '^HTTP/1\.[01] ([0-9]{3})'
+service = "http"
+extra = "status $1, no Server header"
+confidence = "high"
+
+[[probe]]
+name = "redis"
+ports = [6379, 6380, 16379]
+intrusiveness = 4
+# RESP INFO command; the reply carries the version outright.
+send = '*1\r\n$4\r\nINFO\r\n'
+[[probe.match]]
+pattern = 'redis_version:([0-9][^\r\n]*)'
+service = "redis"
+product = "Redis"
+version = "$1"
+[[probe.match]]
+pattern = '^-NOAUTH|^-ERR operation not permitted|^-DENIED'
+service = "redis"
+product = "Redis"
+extra = "authentication required"
+[[probe.match]]
+pattern = '^\+PONG'
+service = "redis"
+product = "Redis"
+
+[[probe]]
+name = "memcached"
+ports = [11211]
+intrusiveness = 3
+send = 'version\r\n'
+[[probe.match]]
+pattern = '^VERSION ([0-9][^\r\n]*)'
+service = "memcached"
+product = "memcached"
+version = "$1"
+
+[[probe]]
+name = "postgresql"
+ports = [5432, 5433]
+intrusiveness = 3
+# An SSLRequest packet: length 8, request code 80877103. A PostgreSQL server
+# answers with a single byte, S or N, and nothing else does.
+send = '\x00\x00\x00\x08\x04\xd2\x16\x2f'
+[[probe.match]]
+pattern = '(?-u)^S$'
+service = "postgresql"
+product = "PostgreSQL"
+extra = "TLS supported"
+[[probe.match]]
+pattern = '(?-u)^N$'
+service = "postgresql"
+product = "PostgreSQL"
+extra = "TLS not supported"
+[[probe.match]]
+pattern = '(?-u)^E.*(FATAL|fe_sendauth|password)'
+service = "postgresql"
+product = "PostgreSQL"
+confidence = "medium"
+
+[[probe]]
+name = "mongodb"
+ports = [27017, 27018, 27019]
+intrusiveness = 4
+# OP_QUERY on admin.$cmd with the BSON document {isMaster: 1}.
+send = '\x3a\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00\xd4\x07\x00\x00\x00\x00\x00\x00admin.$cmd\x00\x00\x00\x00\x00\xff\xff\xff\xff\x13\x00\x00\x00\x10isMaster\x00\x01\x00\x00\x00\x00'
+[[probe.match]]
+pattern = '(?-u)maxWireVersion'
+service = "mongodb"
+product = "MongoDB"
+[[probe.match]]
+pattern = '(?-u)(ismaster|maxBsonObjectSize)'
+service = "mongodb"
+product = "MongoDB"
+
+[[probe]]
+name = "smb"
+ports = [139, 445]
+intrusiveness = 3
+# A NetBIOS session request wrapping an SMB1 Negotiate Protocol request. Both
+# SMB1 and SMB2 servers answer with a recognisable protocol header.
+send = '\x00\x00\x00\x2f\xffSMB\x72\x00\x00\x00\x00\x18\x53\xc8\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x2f\x4b\x00\x00\xc5\x5e\x00\x0c\x00\x02NT LM 0.12\x00'
+[[probe.match]]
+pattern = '(?-u)\xfeSMB'
+service = "smb"
+extra = "SMB2 or later"
+[[probe.match]]
+pattern = '(?-u)\xffSMB'
+service = "smb"
+extra = "SMB1"
+
+[[probe]]
+name = "rdp"
+ports = [3389, 3390]
+intrusiveness = 3
+# An X.224 connection request with an RDP negotiation request attached.
+send = '\x03\x00\x00\x13\x0e\xe0\x00\x00\x00\x00\x00\x01\x00\x08\x00\x03\x00\x00\x00'
+[[probe.match]]
+pattern = '(?-u)^\x03\x00\x00[\x00-\xff]\x0e\xd0'
+service = "ms-wbt-server"
+product = "Microsoft Terminal Services"
+[[probe.match]]
+pattern = '(?-u)^\x03\x00\x00'
+service = "ms-wbt-server"
+confidence = "medium"
+
+[[probe]]
+name = "rtsp"
+ports = [554, 8554, 7070]
+intrusiveness = 2
+send = 'OPTIONS * RTSP/1.0\r\nCSeq: 1\r\nUser-Agent: netscan\r\n\r\n'
+[[probe.match]]
+pattern = '(?i)^RTSP/1\.0 [0-9]{3}(?s).*?server: *([^\r\n]{1,60})'
+service = "rtsp"
+product = "$1"
+[[probe.match]]
+pattern = '^RTSP/1\.0 ([0-9]{3})'
+service = "rtsp"
+extra = "status $1"
+
+[[probe]]
+name = "dns-tcp"
+ports = [53, 5353]
+intrusiveness = 3
+# A length-prefixed CHAOS TXT query for version.bind, the standard way to ask a
+# nameserver what it is.
+send = '\x00\x1e\x9a\xbc\x01\x00\x00\x01\x00\x00\x00\x00\x00\x00\x07version\x04bind\x00\x00\x10\x00\x03'
+[[probe.match]]
+pattern = '(?-u)^[\x00-\xff]{2}\x9a\xbc'
+service = "domain"
+extra = "responded to a version.bind query"
+
+[[probe]]
+name = "sip"
+ports = [5060, 5061]
+intrusiveness = 3
+send = 'OPTIONS sip:netscan@{host} SIP/2.0\r\nVia: SIP/2.0/TCP netscan;branch=z9hG4bKnetscan\r\nFrom: <sip:netscan@netscan>;tag=1\r\nTo: <sip:netscan@{host}>\r\nCall-ID: netscan\r\nCSeq: 1 OPTIONS\r\nMax-Forwards: 70\r\nContent-Length: 0\r\n\r\n'
+[[probe.match]]
+pattern = '(?i)^SIP/2\.0 [0-9]{3}(?s).*?(server|user-agent): *([^\r\n]{1,60})'
+service = "sip"
+product = "$2"
+[[probe.match]]
+pattern = '^SIP/2\.0 ([0-9]{3})'
+service = "sip"
+extra = "status $1"
+
+# ---------------------------------------------------------------------------
+# UDP probes. The payload is sent by the UDP scanner itself (see
+# protocols::udp::default_payload); these rules interpret the reply.
+# ---------------------------------------------------------------------------
+
+[[probe]]
+name = "dns-udp"
+transport = "udp"
+ports = [53]
+intrusiveness = 0
+use_banner = true
+[[probe.match]]
+pattern = '(?-u)^\x9a\xbc'
+service = "domain"
+extra = "answered a version.bind query"
+
+[[probe]]
+name = "snmp"
+transport = "udp"
+ports = [161, 162]
+intrusiveness = 0
+use_banner = true
+[[probe.match]]
+pattern = '(?-u)^\x30[\x00-\xff]{1,4}\x02\x01'
+service = "snmp"
+extra = "SNMP response to a public community read"
+
+[[probe]]
+name = "ntp"
+transport = "udp"
+ports = [123]
+intrusiveness = 0
+use_banner = true
+[[probe.match]]
+pattern = '(?-u)^[\x14-\xdc]'
+service = "ntp"
+extra = "answered a client-mode request"
+
+[[probe]]
+name = "netbios-ns"
+transport = "udp"
+ports = [137]
+intrusiveness = 0
+use_banner = true
+[[probe.match]]
+pattern = '(?-u)^\x82\x28'
+service = "netbios-ns"
+extra = "node status response"
+
+[[probe]]
+name = "mdns"
+transport = "udp"
+ports = [5353]
+intrusiveness = 0
+use_banner = true
+[[probe.match]]
+pattern = '(?-u)_dns-sd|_services|local'
+service = "mdns"
+
+[[probe]]
+name = "ike"
+transport = "udp"
+ports = [500, 4500]
+intrusiveness = 0
+use_banner = true
+[[probe.match]]
+pattern = '(?-u)^nscanprb'
+service = "isakmp"
+extra = "IKE responder echoed our initiator cookie"
+
+[[probe]]
+name = "memcached-udp"
+transport = "udp"
+ports = [11211]
+intrusiveness = 0
+use_banner = true
+[[probe.match]]
+pattern = 'STAT (pid|version)'
+service = "memcached"
+product = "memcached"
