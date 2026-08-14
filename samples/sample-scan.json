@@ -1,0 +1,1260 @@
+{
+  "schema_version": 1,
+  "tool": {
+    "name": "netscan",
+    "version": "0.1.0"
+  },
+  "scan_id": "20260814T023552Z-3a86da",
+  "started_at": "2026-08-14T02:35:52.477123Z",
+  "finished_at": "2026-08-14T02:35:55.666754Z",
+  "outcome": "completed",
+  "parameters": {
+    "targets": [
+      "127.0.0.1",
+      "scanme.nmap.org",
+      "172.20.10.1"
+    ],
+    "ports": "1-1024,3000,5000,6379,8000-8100,9090,9100-9200,11211,27017",
+    "transports": [
+      "tcp"
+    ],
+    "tcp_mode": "connect",
+    "timing": "aggressive",
+    "concurrency": 2048,
+    "service_detection": true,
+    "os_detection": true
+  },
+  "hosts": [
+    {
+      "address": "45.33.32.156",
+      "hostnames": [
+        {
+          "name": "scanme.nmap.org",
+          "source": "user-supplied"
+        }
+      ],
+      "status": "up",
+      "status_reason": "host discovery disabled",
+      "os": {
+        "family": "Linux",
+        "name": "Ubuntu Linux",
+        "confidence": "high",
+        "evidence": [
+          {
+            "kind": "banner",
+            "detail": "service reported \"SSH-2.0-OpenSSH_6.6.1p1 Ubuntu-2ubuntu2.13\\\\n\"",
+            "suggests": "Ubuntu Linux"
+          },
+          {
+            "kind": "port-mix",
+            "detail": "SSH is open and no Windows service is",
+            "suggests": "Unix-like"
+          }
+        ]
+      },
+      "ports": [
+        {
+          "port": 21,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 13.989457999999999,
+          "service": {
+            "name": "ftp",
+            "source": {
+              "kind": "port-number"
+            },
+            "confidence": "low"
+          },
+          "attempts": 1
+        },
+        {
+          "port": 22,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 189.959625,
+          "service": {
+            "name": "ssh",
+            "product": "OpenSSH",
+            "version": "6.6.1p1",
+            "extra": "protocol 2.0",
+            "source": {
+              "kind": "probe",
+              "name": "ssh"
+            },
+            "confidence": "high"
+          },
+          "banner": "SSH-2.0-OpenSSH_6.6.1p1 Ubuntu-2ubuntu2.13\\n",
+          "attempts": 1
+        },
+        {
+          "port": 80,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 194.118667,
+          "service": {
+            "name": "http",
+            "product": "Apache httpd",
+            "version": "2.4.7",
+            "source": {
+              "kind": "probe",
+              "name": "http"
+            },
+            "confidence": "high"
+          },
+          "attempts": 1
+        }
+      ],
+      "other_ports": {
+        "counts": {
+          "closed": 117,
+          "filtered": 1112
+        }
+      },
+      "not_scanned": 0,
+      "started_at": "2026-08-14T02:35:52.506428Z",
+      "finished_at": "2026-08-14T02:35:55.666740Z"
+    },
+    {
+      "address": "127.0.0.1",
+      "hostnames": [
+        {
+          "name": "localhost",
+          "source": "reverse-dns"
+        }
+      ],
+      "status": "up",
+      "status_reason": "host discovery disabled",
+      "os": {
+        "family": "Unix-like",
+        "device_type": "printer",
+        "confidence": "low",
+        "evidence": [
+          {
+            "kind": "port-mix",
+            "detail": "SSH is open and no Windows service is",
+            "suggests": "Unix-like"
+          },
+          {
+            "kind": "port-mix",
+            "detail": "a printing port (9100, 515 or 631) is open",
+            "suggests": "printer"
+          }
+        ]
+      },
+      "ports": [
+        {
+          "port": 22,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 5.671792,
+          "service": {
+            "name": "ssh",
+            "product": "OpenSSH",
+            "version": "10.3",
+            "extra": "protocol 2.0",
+            "source": {
+              "kind": "probe",
+              "name": "ssh"
+            },
+            "confidence": "high"
+          },
+          "banner": "SSH-2.0-OpenSSH_10.3\\n",
+          "attempts": 1
+        },
+        {
+          "port": 88,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.766375,
+          "service": {
+            "name": "kerberos",
+            "source": {
+              "kind": "port-number"
+            },
+            "confidence": "low"
+          },
+          "attempts": 1
+        },
+        {
+          "port": 3000,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.780375,
+          "service": {
+            "name": "http",
+            "product": "nginx",
+            "version": "1.24.0 (Ubuntu)",
+            "source": {
+              "kind": "probe",
+              "name": "http"
+            },
+            "confidence": "high"
+          },
+          "attempts": 1
+        },
+        {
+          "port": 5000,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.7785420000000001,
+          "service": {
+            "name": "http",
+            "product": "nginx",
+            "version": "1.24.0 (Ubuntu)",
+            "source": {
+              "kind": "probe",
+              "name": "http"
+            },
+            "confidence": "high"
+          },
+          "attempts": 1
+        },
+        {
+          "port": 6379,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.7698339999999999,
+          "service": {
+            "name": "redis",
+            "source": {
+              "kind": "port-number"
+            },
+            "confidence": "low"
+          },
+          "attempts": 1
+        },
+        {
+          "port": 8000,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.593542,
+          "service": {
+            "name": "http",
+            "product": "nginx",
+            "version": "1.24.0 (Ubuntu)",
+            "source": {
+              "kind": "probe",
+              "name": "http"
+            },
+            "confidence": "high"
+          },
+          "attempts": 1
+        },
+        {
+          "port": 8008,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.418958,
+          "service": {
+            "name": "http",
+            "product": "nginx",
+            "version": "1.24.0 (Ubuntu)",
+            "source": {
+              "kind": "probe",
+              "name": "http"
+            },
+            "confidence": "high"
+          },
+          "attempts": 1
+        },
+        {
+          "port": 8080,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.787292,
+          "service": {
+            "name": "http",
+            "product": "nginx",
+            "version": "1.24.0 (Ubuntu)",
+            "source": {
+              "kind": "probe",
+              "name": "http"
+            },
+            "confidence": "high"
+          },
+          "attempts": 1
+        },
+        {
+          "port": 8081,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.7646249999999999,
+          "service": {
+            "name": "http",
+            "product": "Apache httpd",
+            "version": "2.4.58",
+            "source": {
+              "kind": "probe",
+              "name": "http"
+            },
+            "confidence": "high"
+          },
+          "attempts": 1
+        },
+        {
+          "port": 8088,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.328292,
+          "service": {
+            "name": "http",
+            "product": "nginx",
+            "version": "1.24.0 (Ubuntu)",
+            "source": {
+              "kind": "probe",
+              "name": "http"
+            },
+            "confidence": "high"
+          },
+          "attempts": 1
+        },
+        {
+          "port": 9090,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.851458,
+          "service": {
+            "name": "http",
+            "product": "gunicorn/21.2.0",
+            "source": {
+              "kind": "probe",
+              "name": "http"
+            },
+            "confidence": "high"
+          },
+          "attempts": 1
+        },
+        {
+          "port": 9100,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.874125,
+          "service": {
+            "name": "jetdirect",
+            "source": {
+              "kind": "port-number"
+            },
+            "confidence": "low"
+          },
+          "attempts": 1
+        },
+        {
+          "port": 9101,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.9566250000000001,
+          "attempts": 1
+        },
+        {
+          "port": 9102,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.966792,
+          "attempts": 1
+        },
+        {
+          "port": 9103,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.976084,
+          "attempts": 1
+        },
+        {
+          "port": 9104,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.9872500000000001,
+          "attempts": 1
+        },
+        {
+          "port": 9105,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.998459,
+          "attempts": 1
+        },
+        {
+          "port": 9106,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.0087080000000002,
+          "attempts": 1
+        },
+        {
+          "port": 9107,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.0154999999999998,
+          "attempts": 1
+        },
+        {
+          "port": 9108,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.0255830000000001,
+          "attempts": 1
+        },
+        {
+          "port": 9109,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.040083,
+          "attempts": 1
+        },
+        {
+          "port": 9110,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.0493329999999998,
+          "attempts": 1
+        },
+        {
+          "port": 9111,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.067167,
+          "attempts": 1
+        },
+        {
+          "port": 9112,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.0736249999999998,
+          "attempts": 1
+        },
+        {
+          "port": 9113,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.0828330000000002,
+          "attempts": 1
+        },
+        {
+          "port": 9114,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.088291,
+          "attempts": 1
+        },
+        {
+          "port": 9115,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.093875,
+          "attempts": 1
+        },
+        {
+          "port": 9116,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.104875,
+          "attempts": 1
+        },
+        {
+          "port": 9117,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.1145,
+          "attempts": 1
+        },
+        {
+          "port": 9118,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.122833,
+          "attempts": 1
+        },
+        {
+          "port": 9119,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.646417,
+          "attempts": 1
+        },
+        {
+          "port": 9120,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.666333,
+          "attempts": 1
+        },
+        {
+          "port": 9121,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.68225,
+          "attempts": 1
+        },
+        {
+          "port": 9122,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.697709,
+          "attempts": 1
+        },
+        {
+          "port": 9123,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.713375,
+          "attempts": 1
+        },
+        {
+          "port": 9124,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.393083,
+          "attempts": 1
+        },
+        {
+          "port": 9125,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.412917,
+          "attempts": 1
+        },
+        {
+          "port": 9126,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.432125,
+          "attempts": 1
+        },
+        {
+          "port": 9127,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.446041,
+          "attempts": 1
+        },
+        {
+          "port": 9128,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.465791,
+          "attempts": 1
+        },
+        {
+          "port": 9129,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.488041,
+          "attempts": 1
+        },
+        {
+          "port": 9130,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.509125,
+          "attempts": 1
+        },
+        {
+          "port": 9131,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.531041,
+          "attempts": 1
+        },
+        {
+          "port": 9132,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.5592079999999999,
+          "attempts": 1
+        },
+        {
+          "port": 9133,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.6186670000000001,
+          "attempts": 1
+        },
+        {
+          "port": 9134,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.6390840000000001,
+          "attempts": 1
+        },
+        {
+          "port": 9135,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.65825,
+          "attempts": 1
+        },
+        {
+          "port": 9136,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.676083,
+          "attempts": 1
+        },
+        {
+          "port": 9137,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.695125,
+          "attempts": 1
+        },
+        {
+          "port": 9138,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.7128329999999999,
+          "attempts": 1
+        },
+        {
+          "port": 9139,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.7364999999999999,
+          "attempts": 1
+        },
+        {
+          "port": 9140,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.792917,
+          "attempts": 1
+        },
+        {
+          "port": 9141,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.874958,
+          "attempts": 1
+        },
+        {
+          "port": 9142,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.707042,
+          "attempts": 1
+        },
+        {
+          "port": 9143,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.729708,
+          "attempts": 1
+        },
+        {
+          "port": 9144,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.505125,
+          "attempts": 1
+        },
+        {
+          "port": 9145,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.438,
+          "attempts": 1
+        },
+        {
+          "port": 9146,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.427125,
+          "attempts": 1
+        },
+        {
+          "port": 9147,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.413333,
+          "attempts": 1
+        },
+        {
+          "port": 9148,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.404125,
+          "attempts": 1
+        },
+        {
+          "port": 9149,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.395583,
+          "attempts": 1
+        },
+        {
+          "port": 9150,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.380209,
+          "attempts": 1
+        },
+        {
+          "port": 9151,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.371041,
+          "attempts": 1
+        },
+        {
+          "port": 9152,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.35770799999999997,
+          "attempts": 1
+        },
+        {
+          "port": 9153,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.11933300000000001,
+          "attempts": 1
+        },
+        {
+          "port": 9154,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.336042,
+          "attempts": 1
+        },
+        {
+          "port": 9155,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.47804199999999997,
+          "attempts": 1
+        },
+        {
+          "port": 9156,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.221833,
+          "attempts": 1
+        },
+        {
+          "port": 9157,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.354292,
+          "attempts": 1
+        },
+        {
+          "port": 9158,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.126875,
+          "attempts": 1
+        },
+        {
+          "port": 9159,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.169083,
+          "attempts": 1
+        },
+        {
+          "port": 9160,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.200125,
+          "service": {
+            "name": "cassandra-thrift",
+            "source": {
+              "kind": "port-number"
+            },
+            "confidence": "low"
+          },
+          "attempts": 1
+        },
+        {
+          "port": 9161,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.228542,
+          "attempts": 1
+        },
+        {
+          "port": 9162,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.2581669999999998,
+          "attempts": 1
+        },
+        {
+          "port": 9163,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.354292,
+          "attempts": 1
+        },
+        {
+          "port": 9164,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.596792,
+          "attempts": 1
+        },
+        {
+          "port": 9165,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.5747909999999999,
+          "attempts": 1
+        },
+        {
+          "port": 9166,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.526834,
+          "attempts": 1
+        },
+        {
+          "port": 9167,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.623667,
+          "attempts": 1
+        },
+        {
+          "port": 9168,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.369667,
+          "attempts": 1
+        },
+        {
+          "port": 9169,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.9515,
+          "attempts": 1
+        },
+        {
+          "port": 9170,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.908292,
+          "attempts": 1
+        },
+        {
+          "port": 9171,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.882583,
+          "attempts": 1
+        },
+        {
+          "port": 9172,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.857209,
+          "attempts": 1
+        },
+        {
+          "port": 9173,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.829459,
+          "attempts": 1
+        },
+        {
+          "port": 9174,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.7714580000000001,
+          "attempts": 1
+        },
+        {
+          "port": 9175,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.510417,
+          "attempts": 1
+        },
+        {
+          "port": 9176,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.493125,
+          "attempts": 1
+        },
+        {
+          "port": 9177,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.9890829999999999,
+          "attempts": 1
+        },
+        {
+          "port": 9178,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.966666,
+          "attempts": 1
+        },
+        {
+          "port": 9179,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.95,
+          "attempts": 1
+        },
+        {
+          "port": 9180,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.930458,
+          "attempts": 1
+        },
+        {
+          "port": 9181,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.9079999999999999,
+          "attempts": 1
+        },
+        {
+          "port": 9182,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.9768330000000001,
+          "attempts": 1
+        },
+        {
+          "port": 9183,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 1.0453750000000002,
+          "attempts": 1
+        },
+        {
+          "port": 9184,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.540709,
+          "attempts": 1
+        },
+        {
+          "port": 9185,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.48312499999999997,
+          "attempts": 1
+        },
+        {
+          "port": 9186,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.466916,
+          "attempts": 1
+        },
+        {
+          "port": 9187,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.44708299999999995,
+          "attempts": 1
+        },
+        {
+          "port": 9188,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.352167,
+          "attempts": 1
+        },
+        {
+          "port": 9189,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.4555,
+          "attempts": 1
+        },
+        {
+          "port": 9190,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.417041,
+          "attempts": 1
+        },
+        {
+          "port": 9191,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.41558300000000004,
+          "attempts": 1
+        },
+        {
+          "port": 9192,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.496833,
+          "attempts": 1
+        },
+        {
+          "port": 9193,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.48470799999999997,
+          "attempts": 1
+        },
+        {
+          "port": 9194,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.409958,
+          "attempts": 1
+        },
+        {
+          "port": 9195,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.428875,
+          "attempts": 1
+        },
+        {
+          "port": 9196,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.418875,
+          "attempts": 1
+        },
+        {
+          "port": 9197,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.40975,
+          "attempts": 1
+        },
+        {
+          "port": 9198,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.417417,
+          "attempts": 1
+        },
+        {
+          "port": 9199,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.572375,
+          "attempts": 1
+        },
+        {
+          "port": 11211,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.6613749999999999,
+          "service": {
+            "name": "memcached",
+            "source": {
+              "kind": "port-number"
+            },
+            "confidence": "low"
+          },
+          "attempts": 1
+        },
+        {
+          "port": 27017,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 0.409708,
+          "service": {
+            "name": "mongodb",
+            "source": {
+              "kind": "port-number"
+            },
+            "confidence": "low"
+          },
+          "attempts": 1
+        }
+      ],
+      "other_ports": {
+        "counts": {
+          "closed": 1119
+        }
+      },
+      "not_scanned": 0,
+      "started_at": "2026-08-14T02:35:52.501921Z",
+      "finished_at": "2026-08-14T02:35:54.565735Z"
+    },
+    {
+      "address": "172.20.10.1",
+      "status": "up",
+      "status_reason": "host discovery disabled",
+      "os": {
+        "confidence": "low"
+      },
+      "ports": [
+        {
+          "port": 21,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 11.145042,
+          "service": {
+            "name": "ftp",
+            "source": {
+              "kind": "port-number"
+            },
+            "confidence": "low"
+          },
+          "attempts": 1
+        },
+        {
+          "port": 53,
+          "transport": "tcp",
+          "state": "open",
+          "reason": "connection-established",
+          "rtt_ms": 12.538,
+          "service": {
+            "name": "domain",
+            "extra": "responded to a version.bind query",
+            "source": {
+              "kind": "probe",
+              "name": "dns-tcp"
+            },
+            "confidence": "high"
+          },
+          "attempts": 1
+        }
+      ],
+      "other_ports": {
+        "counts": {
+          "closed": 1230
+        }
+      },
+      "not_scanned": 0,
+      "started_at": "2026-08-14T02:35:52.503760Z",
+      "finished_at": "2026-08-14T02:35:54.519567Z"
+    }
+  ],
+  "stats": {
+    "hosts_total": 3,
+    "hosts_up": 3,
+    "hosts_down": 0,
+    "probes_sent": 4808,
+    "ports_tested": 3696,
+    "ports_open": 118,
+    "ports_closed": 2466,
+    "ports_filtered": 1112,
+    "retries": 1112,
+    "errors": 0,
+    "duration_ms": 3189,
+    "mean_rtt_ms": 0.7881980000000001
+  }
+}

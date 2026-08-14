@@ -1,0 +1,36 @@
+[package]
+name = "netscan-cli"
+description = "netscan: a fast, modern network scanner and analyser"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+categories.workspace = true
+readme = "../../README.md"
+
+[[bin]]
+name = "netscan"
+path = "src/main.rs"
+
+[features]
+default = []
+raw = ["netscan-core/raw"]
+
+[dependencies]
+netscan-core = { workspace = true }
+
+clap = { version = "4", features = ["derive", "wrap_help", "env"] }
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "signal", "time"] }
+anyhow = "1"
+serde_json = { workspace = true }
+chrono = { workspace = true }
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["rt-multi-thread", "macros", "net", "io-util", "time"] }
+tempfile = "3"
+assert_cmd = "2"
+predicates = "3"
