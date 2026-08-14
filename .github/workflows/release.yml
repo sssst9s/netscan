@@ -146,7 +146,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main
+          ref: release
 
       - name: Point the formula at this tag
         run: |
@@ -170,4 +170,4 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add Formula/netscan.rb
           git commit -m "Point the Homebrew formula at ${GITHUB_REF_NAME}"
-          git push origin main
+          git push origin release
